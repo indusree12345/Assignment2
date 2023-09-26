@@ -1,0 +1,101 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+public class weather1 {
+    private static final String API_KEY = "b6907d289e10d714a6e88b30761fae22";
+    private static final String BASE_URL = "https://samples.openweathermap.org/data/2.5/forecast/hourly?q=London,us&appid=b6907d289e10d714a6e88b30761fae22";
+    public static void main(String[] args) throws IOException, ParseException, JSONException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        int choice = 0;
+        while (choice != 0) {
+            System.out.println("Select an option:");
+            System.out.println("1. Get Temperature");
+            System.out.println("2. Get Wind Speed");
+            System.out.println("3. Get Pressure");
+            System.out.println("0. Exit");
+            System.out.print("Enter your choice: ");
+            choice = Integer.parseInt(reader.readLine());
+            switch (choice) {
+                case 1:
+                    getTemperature(reader);
+                    break;
+                case 2:
+                    getWindSpeed(reader);
+                    break;
+                case 3:
+                    getPressure(reader);
+                    break;
+                case 0:
+                    System.out.println("Exiting...");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please enter a number between 0 and 3.");
+            }
+        }
+    }
+    private static void getTemperature(BufferedReader reader) throws IOException, ParseException, JSONException {
+        System.out.print("Enter date with time (yyyy-MM-dd HH:mm:ss): ");
+        String dateString = reader.readLine();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = dateFormat.parse(dateString);
+        JSONObject weatherData = getWeatherData(date);
+        if (weatherData != null) {
+            JSONArray list = weatherData.getJSONArray("list");
+            for (int i = 0; i < list.length(); i++) {
+                JSONObject weather = list.getJSONObject(i);
+                JSONObject main = weather.getJSONObject("main ");
+                double temp = main.getDouble("temp");
+                double tempMin = main.getDouble("temp_min");
+                double tempMax = main.getDouble("temp_max");
+                System.out.println("Temperature at " + dateString + ":");
+                System.out.println("Current: " + temp + "°C");
+                System.out.println("Minimum: " + tempMin + "°C");
+                System.out.println("Maximum: " + tempMax + "°C");
+            }
+        }
+    }
+    private static JSONObject getWeatherData(Date date) {
+		return null;
+	}
+	private static void getWindSpeed(BufferedReader reader) throws IOException, ParseException, JSONException {
+        System.out.print("Enter date with time (yyyy-MM-dd HH:mm:ss): ");
+        String dateString = reader.readLine();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = dateFormat.parse(dateString);
+        JSONObject weatherData = getWeatherData(date);
+        if (weatherData != null) {
+            JSONArray list = weatherData.getJSONArray("list");
+            for (int i = 0; i < list.length(); i++) {
+                JSONObject weather = list.getJSONObject(i);
+                JSONObject wind = weather.getJSONObject("wind");
+                double speed = wind.getDouble("speed");
+                System.out.println("Wind speed at " + dateString + ":");
+                System.out.println(speed + " m/s");
+            }
+        }
+    }
+    private static void getPressure(BufferedReader reader) throws IOException, ParseException, JSONException {
+        System.out.print("Enter date with time (yyyy-MM-dd HH:mm:ss): ");
+        String dateString = reader.readLine();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = dateFormat.parse(dateString);
+        JSONObject weatherData = getWeatherData(date);
+        if (weatherData != null) {
+            JSONArray list = weatherData.getJSONArray("list");
+            for (int i = 0; i < list.length(); i++) {
+                JSONObject weather = list.getJSONObject(i);
+                JSONObject main = weather.getJSONObject("main");
+                double pressure = main.getDouble("pressure");
+                System.out.println("Pressure at " + dateString + ":");
+                System.out.println(pressure + " hPa");
+            }
+        }
+    }
+}
